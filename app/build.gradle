@@ -31,11 +31,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     //mockito
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.+'
-    androidTestCompile 'org.mockito:mockito-core:2.+'
-    androidTestCompile "org.mockito:mockito-android:2.+"
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.2.0'
+    androidTestCompile 'org.mockito:mockito-core:2.23.0'
+    androidTestCompile "org.mockito:mockito-android:2.23.0"
     testImplementation 'org.mockito:mockito-inline:2.21.0'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC2"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.2.0'
     testImplementation 'junit:junit:4.12'
 }

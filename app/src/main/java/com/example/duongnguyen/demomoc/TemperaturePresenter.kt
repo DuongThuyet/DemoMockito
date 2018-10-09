@@ -13,11 +13,10 @@ class TemperaturePresenter(
         val inaccurateTemperature = temperatureProvider.getCelsiusTemperatureAt(lastLocation)
 
         val accurateTemperature = temperatureProvider.getCelsiusTemperatureAt(exactLocation)
-        if (lastLocation.latitude > 10f) {
+
             view.displayTemperature(inaccurateTemperature)
 
             view.displayTemperature(accurateTemperature)
-        }
 
     }
 }

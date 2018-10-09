@@ -1,58 +1,56 @@
 package com.example.duongnguyen.demomoc
 
-import org.junit.Before
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.MockitoAnnotations
+import org.mockito.Mockito.*
 
 
 class TemperaturePresenterTest {
 
-    private var locationProvider = mock(LocationProvider::class.java)
+    private val lastLocation = Coordinate(41.5, 8.9)
 
-    private var temperatureProvider = mock(TemperatureProvider::class.java)
+    private val currentLocation = Coordinate(38.7, 9.7)
+
+    private val locationProvider: LocationProvider = mock {
+
+        on { getLastKnownLocation() }.then { lastLocation }
+
+        on { getExactLocation() }.then { currentLocation }
+
+    }
+
+    private var temperatureProvider: TemperatureProvider = mock()
 
     private var view = mock(View::class.java)
 
-    private var temperaturePresenter = TemperaturePresenter(locationProvider = locationProvider,
+     var temperaturePresenter = TemperaturePresenter(locationProvider = locationProvider,
             temperatureProvider = temperatureProvider,
             view = view)
 
-    @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-    }
 
     @Test
-    fun testInexactTemperatureIsDisplayedFollowedByExactTemperature() {
-        val lastLocation = Coordinate(41.5, 8.9)
-        
-        val currentLocation = Coordinate(38.7, 9.7)
+    fun `display temperature for last known location first, and then for exact location`() {
 
-        Mockito.`when`(locationProvider.getExactLocation()).thenReturn(currentLocation)
+        whenever(temperatureProvider.getCelsiusTemperatureAt(lastLocation)).thenReturn(18f)
 
-        Mockito.`when`(locationProvider.getLastKnownLocation()).thenReturn(lastLocation)
-
-        Mockito.`when`(temperatureProvider.getCelsiusTemperatureAt(lastLocation)).thenReturn(18f)
-
-        Mockito.`when`(temperatureProvider.getCelsiusTemperatureAt(currentLocation)).thenReturn(21f)
+        whenever(temperatureProvider.getCelsiusTemperatureAt(currentLocation)).thenReturn(21f)
 
         temperaturePresenter.start()
 
-        val inOrder = Mockito.inOrder(temperatureProvider, view)
+        Mockito.inOrder(temperatureProvider, view).apply {
 
-        inOrder.verify<TemperatureProvider>(temperatureProvider)
-                .getCelsiusTemperatureAt(lastLocation)
+            verify(temperatureProvider).getCelsiusTemperatureAt(lastLocation)
 
-        inOrder.verify<TemperatureProvider>(temperatureProvider)
-                .getCelsiusTemperatureAt(currentLocation)
+            verify(temperatureProvider).getCelsiusTemperatureAt(currentLocation)
 
-        inOrder.verify<View>(view).displayTemperature(18f)
+            verify(view).displayTemperature(18f)
 
-        inOrder.verify<View>(view).displayTemperature(21f)
+            verify(view).displayTemperature(21f)
+
+        }
+
     }
 
 }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 internal class GreeterTest2 {
     //Field user of type User - was not mocked since Mockito doesn't mock a Final class when 'mock-maker-inline' option is not set
-    var greeter = Greeter(User("firstName", "lastName"))
+    private var greeter = Greeter(User("firstName", "lastName"))
 
     @Test
     fun testGetEnglishGreeting() {
